@@ -6,7 +6,7 @@
 <p>Fragment insertion(Google map), OSM included(mapswithme)</p>
 ==========================================
 <h1>Left Work:</h1>
-UI flow, Connect data with Parse.
+<p>UI flow, Connect data with Parse.</p>
 ==========================================
 <h1>Instruction</h1>
 <p>There is only two activity now, MainActivity.java and Near.java
