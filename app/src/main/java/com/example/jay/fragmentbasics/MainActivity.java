@@ -6,8 +6,8 @@ import android.content.DialogInterface;
 import android.content.IntentSender;
 import android.graphics.Color;
 import android.location.Location;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,9 +37,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mapswithme.maps.api.MapsWithMeApi;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 
-public class MainActivity extends ActionBarActivity implements OnMapReadyCallback,
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,
         ConnectionCallbacks, OnConnectionFailedListener, LocationListener{
     //GoogleMapOptions options = new GoogleMapOptions();
     private GoogleApiClient mGAC ;
@@ -62,18 +63,17 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
     private static final String DIALOG_ERROR = "dialog_error";
     // Bool to track whether the app is already resolving an error
     private boolean mResolvingError = false;
+    //Parse User registration
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ParseObject testObject = new ParseObject("TestObject");
-        testObject.put("foo", "bar");
-        testObject.saveInBackground();
-        mLatitudeText = (TextView)findViewById(R.id.txt1);
-        mLongitudeText = (TextView)findViewById(R.id.txt2);
+
+        //mLatitudeText = (TextView)findViewById(R.id.txt1);
+        //mLongitudeText = (TextView)findViewById(R.id.txt2);
         btnView = (Button)findViewById(R.id.btnView);
         btnView.setOnClickListener(btnVListener);
-        mAccuracy = (TextView)findViewById(R.id.txt3);
+        //mAccuracy = (TextView)findViewById(R.id.txt3);
         mapfrag = (MapFragment)getFragmentManager().findFragmentById(R.id.map);
         mapfrag.getMapAsync(this);
         /**options.mapType(GoogleMap.MAP_TYPE_HYBRID)
@@ -81,6 +81,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
                 .rotateGesturesEnabled(true)
                 .tiltGesturesEnabled(true);
         mapfrag.newInstance(options);*/
+
         //Connect to Google Play Services
         buildGoogleApiClient();
         createLocationRequest();
@@ -155,8 +156,16 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         // The good stuff goes here.
         Log.d("TAG", "Connect!");
         //Get Location!
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGAC);
-        if(mRequestingLocationUpdates)startLocationUpdates();
+        try {
+            mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGAC);
+            if (mRequestingLocationUpdates) startLocationUpdates();
+        }catch(NullPointerException NPE){
+            Log.d("TAG","NPE detected!");
+        }catch(Exception er){
+            Log.d("TAG","error: "+er.toString());
+        }finally{
+
+        }
 
     }
 
@@ -215,16 +224,17 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
         mLastLocation = location;
         lat =mLastLocation.getLatitude();
         lon =mLastLocation.getLongitude();
-        mLatitudeText.setText("Latitude: "+String.valueOf(lat));
-        mLongitudeText.setText("Longitude: "+String.valueOf(lon));
-        mAccuracy.setText("Accuracy: "+String.valueOf(mLastLocation.getAccuracy()));
+        //mLatitudeText.setText("Latitude: "+String.valueOf(lat));
+        //mLongitudeText.setText("Longitude: "+String.valueOf(lon));
+        //mAccuracy.setText("Accuracy: "+String.valueOf(mLastLocation.getAccuracy()));
         if (mLastLocation != null) {
             Log.d("TAG", "LastLocation is Not null");
             lat =mLastLocation.getLatitude();
             lon =mLastLocation.getLongitude();
-            mLatitudeText.setText("Latitude: "+String.valueOf(lat));
-            mLongitudeText.setText("Longitude: "+String.valueOf(lon));
-            mAccuracy.setText("Accuracy: "+String.valueOf(mLastLocation.getAccuracy()));
+            //mLatitudeText.setText("Latitude: "+String.valueOf(lat));
+            //mLongitudeText.setText("Longitude: "+String.valueOf(lon));
+            //mAccuracy.setText("Accuracy: "+String.valueOf(mLastLocation.getAccuracy()));
+            Toast.makeText(getApplicationContext(), String.valueOf(lat)+","+String.valueOf(lon),Toast.LENGTH_SHORT).show();
             //show location with maps.me
             //if (flag)showLocationWithMap(mLastLocation);
             //Add location circle
@@ -248,6 +258,10 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
             oldAccuracy = mLastLocation.getAccuracy();
             mmap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 17));
             mmap.setOnInfoWindowClickListener(infoWindowClickListener);
+            //Send User Location to Parse
+            /**ParseUser user = ParseUser.getCurrentUser();
+            user.put("location",String.valueOf(lat)+","+String.valueOf(lon));
+            user.saveEventually();*/
 
         }
     }
@@ -278,7 +292,7 @@ public class MainActivity extends ActionBarActivity implements OnMapReadyCallbac
             final String name = location.getProvider();
             MapsWithMeApi.showPointOnMap(this, lat, lon, name);
         }catch(Exception err){
-            Toast.makeText(getApplicationContext(),"エラーです。Error info: "+err.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"Error!Error info: "+err.toString(), Toast.LENGTH_SHORT).show();
             Toast.makeText(getApplicationContext(),"Maybe your network(WiFi or 3G/4G) was off, please turn it on and try again", Toast.LENGTH_LONG).show();
         }finally {
             //TODO

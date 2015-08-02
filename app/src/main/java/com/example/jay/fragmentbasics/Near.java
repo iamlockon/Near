@@ -1,9 +1,11 @@
 package com.example.jay.fragmentbasics;
 
+import android.app.Activity;
 import android.app.Application;
 
 import com.parse.Parse;
 import com.parse.ParseObject;
+import com.parse.ui.ParseLoginBuilder;
 
 /**
  * Created by Jay on 2015/7/28.

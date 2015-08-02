@@ -1,1 +1,1 @@
-include ':app', ':mapswithme'
+include ':app', ':mapswithme', ':ParseLoginUI'
