@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">FragmentBasics</string>
+    <string name="app_name">Near</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Switch to Offline map</string>
+    <string name="update_location">Update users location</string>
 </resources>

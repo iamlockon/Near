@@ -3,6 +3,7 @@ package com.example.jay.fragmentbasics;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Color;
 import android.location.Location;
@@ -30,14 +31,27 @@ import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mapswithme.maps.api.MapsWithMeApi;
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.LogInCallback;
+import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.ui.ParseLoginActivity;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback,
@@ -48,13 +62,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private double lat = 0;
     private double lon = 0;
     double oldAccuracy = 0;
-    Circle oldCircle;
-    Marker oldMarker;
+    Circle circle;
+    Marker marker;
     private boolean flag = true;
     MapFragment mapfrag;
     Location mLastLocation;
     TextView mLatitudeText,mLongitudeText,mAccuracy;
-    Button btnView;
+    Button btnView,btnShow;
     LocationRequest mLocationRequest;
     boolean mRequestingLocationUpdates = true;
     // Request code to use when launching the resolution activity
@@ -64,6 +78,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     // Bool to track whether the app is already resolving an error
     private boolean mResolvingError = false;
     //Parse User registration
+    ParseUser user;
+    ParseGeoPoint point;
+    boolean isOtherUserInitialized = false;
+    ArrayList<Marker> myMarkersList;
+    boolean isShowOtherUsersOk = false;
+    int count_loca = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,8 +91,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         //mLatitudeText = (TextView)findViewById(R.id.txt1);
         //mLongitudeText = (TextView)findViewById(R.id.txt2);
-        btnView = (Button)findViewById(R.id.btnView);
-        btnView.setOnClickListener(btnVListener);
+        //btnView = (Button)findViewById(R.id.btnView);
+        //btnView.setOnClickListener(btnVListener);
         //mAccuracy = (TextView)findViewById(R.id.txt3);
         mapfrag = (MapFragment)getFragmentManager().findFragmentById(R.id.map);
         mapfrag.getMapAsync(this);
@@ -85,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Connect to Google Play Services
         buildGoogleApiClient();
         createLocationRequest();
+
     }
     @Override
     protected void onStart(){
@@ -124,8 +145,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            try {
+                showLocationWithMap(mLastLocation);
+            }catch(Exception err){
+                Toast.makeText(getApplicationContext(), "Error: "+err.toString(),Toast.LENGTH_LONG).show();
+            }finally {
+
+            }
             return true;
         }
+        if(id ==R.id.update_location)setOtherUserOnMap(user);
 
         return super.onOptionsItemSelected(item);
     }
@@ -140,6 +169,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Ui.setAllGesturesEnabled(true);
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mmap = map;
+        //Initialize User's circle and marker
+        circle = mmap.addCircle(new CircleOptions()
+                .center(new LatLng(lat, lon))
+                .strokeWidth(0)
+                .fillColor(Color.argb(80, 0, 0, 255)));
+        /*marker = mmap.addMarker(new MarkerOptions()
+                .position(new LatLng(lat, lon))
+                .title("Latest Location")
+                .snippet("default"));*/
     }
     protected synchronized void buildGoogleApiClient() {
 
@@ -235,34 +273,34 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             //mLongitudeText.setText("Longitude: "+String.valueOf(lon));
             //mAccuracy.setText("Accuracy: "+String.valueOf(mLastLocation.getAccuracy()));
             Toast.makeText(getApplicationContext(), String.valueOf(lat)+","+String.valueOf(lon),Toast.LENGTH_SHORT).show();
-            //show location with maps.me
-            //if (flag)showLocationWithMap(mLastLocation);
-            //Add location circle
-            Log.d("TAG","Circle ~");
-            Circle circle = mmap.addCircle(new CircleOptions()
-                    .center(new LatLng(lat, lon))
-                    .radius(mLastLocation.getAccuracy())
-                    .strokeWidth(0)
-                    .fillColor(Color.argb(80, 0, 0, 255)));
-            Marker marker = mmap.addMarker(new MarkerOptions()
-                    .position(new LatLng(lat, lon))
-                    .title("Latest Location")
-                    .snippet("Snippet of Marker"));
-            //Update if a new more accurate position receives
-            if(oldAccuracy != 0){
-                oldCircle.remove();
-                oldMarker.remove();
-            }
-            oldCircle = circle;
-            oldMarker = marker;
-            oldAccuracy = mLastLocation.getAccuracy();
+
+            //Set Location Accuracy and User location
+            circle.setRadius(mLastLocation.getAccuracy());
+            circle.setCenter(new LatLng(lat, lon));
+            //marker.setPosition(new LatLng(lat, lon));
+            //Set user's view
             mmap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 17));
             mmap.setOnInfoWindowClickListener(infoWindowClickListener);
             //Send User Location to Parse
-            /**ParseUser user = ParseUser.getCurrentUser();
-            user.put("location",String.valueOf(lat)+","+String.valueOf(lon));
-            user.saveEventually();*/
-
+            point = new ParseGeoPoint(lat, lon);
+            user = ParseUser.getCurrentUser();
+            if (user != null) {
+                // do stuff with the user
+                Toast.makeText(getApplicationContext(), "Get Current User",Toast.LENGTH_SHORT).show();
+                user.put("location", point);
+                user.saveInBackground();
+                isShowOtherUsersOk = true;
+                count_loca++;
+                if(count_loca > 5){
+                    count_loca =0;
+                    stopLocationUpdates();
+                }
+            } else {
+                // show the signup or login screen
+                Toast.makeText(getApplicationContext(),"Cannot configure user status....",Toast.LENGTH_SHORT).show();
+                Intent intent =new Intent(MainActivity.this, ParseLoginActivity.class);
+                startActivity(intent);
+            }
         }
     }
 
@@ -299,11 +337,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         //flag = false;
     }
-    private Button.OnClickListener btnVListener =new Button.OnClickListener(){
+    /*private Button.OnClickListener btnVListener =new Button.OnClickListener(){
         public void onClick(View v){
             showLocationWithMap(mLastLocation);
         }
-    };
+    }*/
     private GoogleMap.OnInfoWindowClickListener infoWindowClickListener = new GoogleMap.OnInfoWindowClickListener(){
 
         @Override
@@ -316,8 +354,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     //Get Location Updates
     protected void createLocationRequest(){
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10*1000); //10 seconds
-        mLocationRequest.setFastestInterval(5*1000);
+        mLocationRequest.setInterval(5*1000); //5 seconds
+        mLocationRequest.setFastestInterval(3*1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
     protected void startLocationUpdates(){
@@ -329,6 +367,71 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         LocationServices.FusedLocationApi.removeLocationUpdates(
                 mGAC, this);
         mRequestingLocationUpdates = false;
+    }
+    protected void addMarkerOfOtherUser(ParseObject object){
+            ParseGeoPoint poi = object.getParseGeoPoint("location");
+            Marker mar = mmap.addMarker(new MarkerOptions()
+                    .position(new LatLng(poi.getLatitude(), poi.getLongitude()))
+                    .title(object.getString("name"))
+                    .snippet("default snippet"));
+            myMarkersList.add(mar);
+            object.put("markerId",mar.getId());
+            object.saveInBackground();
+    }
+    protected void setMarkerOfOtherUser(ParseObject use, Marker m){
+        ParseGeoPoint geoPoint = use.getParseGeoPoint("location");
+        double lat = geoPoint.getLatitude();
+        double lon = geoPoint.getLongitude();
+        m.setPosition(new LatLng(lat, lon));
+    }
+    protected void setOtherUserOnMap(ParseObject userObject){
+        startLocationUpdates();
+        ParseGeoPoint userLocation = (ParseGeoPoint) userObject.get("location");
+        //get queries of Users' locations...
+        //The user class is not "User" but "_User".....WTF
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
+        Toast.makeText(getApplicationContext(), "setOther!~", Toast.LENGTH_SHORT).show();
+        query.whereNear("location", userLocation);
+        query.whereNotEqualTo("name","Jay");
+        //set 10 nearest user as a limit.
+        query.setLimit(10);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, ParseException e) {
+                if (e != null) {
+                    Toast.makeText(getApplicationContext(), "error.....", Toast.LENGTH_LONG).show();
+                } else {
+                    //Set user locations on Map
+                    Toast.makeText(getApplicationContext(), "no error", Toast.LENGTH_SHORT).show();
+                    myMarkersList = new ArrayList<Marker>(list.size());
+                    //Handle users respectively
+                    for (ParseObject use : list) {
+                        //Initialize other users' marker if haven't
+                        if (!isOtherUserInitialized) {
+                            addMarkerOfOtherUser(use);
+                        }
+                    }
+                    //Stop adding marker from now on
+                    isOtherUserInitialized = true;
+                    //Now each user has one marker.
+                    //So let's update their position
+                    //get Marker id from Parse(don't know which marker is of current user)
+                    for (ParseObject use : list) {
+                        int i = 0;
+                        String str = use.getString("markerId");
+                        //Find marker, if right >>break
+                        while (i < list.size()) {
+                            if (myMarkersList.get(i).getId().equals(str)) {
+                                setMarkerOfOtherUser(use, myMarkersList.get(i));
+                                break;
+                            }
+                            i++;
+                        }
+                    }
+                    stopLocationUpdates();
+                }
+            }
+        });
     }
 }
 
