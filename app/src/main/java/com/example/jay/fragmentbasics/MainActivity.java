@@ -2,18 +2,21 @@ package com.example.jay.fragmentbasics;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mmap;
     private double lat = 0;
     private double lon = 0;
-    double oldAccuracy = 0;
+    double oldAccuracy = 800;
     Circle circle;
     Marker marker;
     private boolean flag = true;
@@ -81,14 +84,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     ParseUser user;
     ParseGeoPoint point;
     boolean isOtherUserInitialized = false;
-    ArrayList<Marker> myMarkersList;
+    ArrayList<Marker> myMarkersList = new ArrayList<Marker>();
     boolean isShowOtherUsersOk = false;
-    int count_loca = 0;
+    ProgressBar pb;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         //mLatitudeText = (TextView)findViewById(R.id.txt1);
         //mLongitudeText = (TextView)findViewById(R.id.txt2);
         //btnView = (Button)findViewById(R.id.btnView);
@@ -101,11 +103,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .rotateGesturesEnabled(true)
                 .tiltGesturesEnabled(true);
         mapfrag.newInstance(options);*/
-
+        pb = (ProgressBar) findViewById(R.id.progress_bar);
         //Connect to Google Play Services
+        pb.setVisibility(ProgressBar.VISIBLE);
         buildGoogleApiClient();
         createLocationRequest();
-
     }
     @Override
     protected void onStart(){
@@ -129,6 +131,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onResume();
         if(mGAC.isConnected() && !mRequestingLocationUpdates)startLocationUpdates();
     }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -168,6 +172,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Ui.setMapToolbarEnabled(true);
         Ui.setAllGesturesEnabled(true);
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        map.setMyLocationEnabled(true);
         mmap = map;
         //Initialize User's circle and marker
         circle = mmap.addCircle(new CircleOptions()
@@ -262,6 +267,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         mLastLocation = location;
         lat =mLastLocation.getLatitude();
         lon =mLastLocation.getLongitude();
+        // on some click or some loading we need to wait for...
+        // run a background job and once complete
         //mLatitudeText.setText("Latitude: "+String.valueOf(lat));
         //mLongitudeText.setText("Longitude: "+String.valueOf(lon));
         //mAccuracy.setText("Accuracy: "+String.valueOf(mLastLocation.getAccuracy()));
@@ -279,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             circle.setCenter(new LatLng(lat, lon));
             //marker.setPosition(new LatLng(lat, lon));
             //Set user's view
-            mmap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 17));
+            if(!isShowOtherUsersOk)mmap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lon), 17));
             mmap.setOnInfoWindowClickListener(infoWindowClickListener);
             //Send User Location to Parse
             point = new ParseGeoPoint(lat, lon);
@@ -290,10 +297,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 user.put("location", point);
                 user.saveInBackground();
                 isShowOtherUsersOk = true;
-                count_loca++;
-                if(count_loca > 5){
-                    count_loca =0;
+                oldAccuracy =mLastLocation.getAccuracy();
+                if(oldAccuracy < 25){
                     stopLocationUpdates();
+                    pb.setVisibility(ProgressBar.INVISIBLE);
                 }
             } else {
                 // show the signup or login screen
@@ -352,13 +359,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     };
     //Get Location Updates
-    protected void createLocationRequest(){
+    protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(5*1000); //5 seconds
-        mLocationRequest.setFastestInterval(3*1000);
+        mLocationRequest.setInterval(10*1000); //10 seconds
+        mLocationRequest.setFastestInterval(5*1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
-    protected void startLocationUpdates(){
+    protected void startLocationUpdates() {
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGAC, mLocationRequest, this);
 
@@ -368,9 +375,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 mGAC, this);
         mRequestingLocationUpdates = false;
     }
-    protected void addMarkerOfOtherUser(ParseObject object){
-            ParseGeoPoint poi = object.getParseGeoPoint("location");
-            Marker mar = mmap.addMarker(new MarkerOptions()
+
+    protected void addMarkerOfOtherUser(ParseObject object) {
+        ParseGeoPoint poi = object.getParseGeoPoint("location");
+        Marker mar = mmap.addMarker(new MarkerOptions()
                     .position(new LatLng(poi.getLatitude(), poi.getLongitude()))
                     .title(object.getString("name"))
                     .snippet("default snippet"));
@@ -392,7 +400,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
         Toast.makeText(getApplicationContext(), "setOther!~", Toast.LENGTH_SHORT).show();
         query.whereNear("location", userLocation);
-        query.whereNotEqualTo("name","Jay");
+        query.whereNotEqualTo("name",userObject.getString("name"));
         //set 10 nearest user as a limit.
         query.setLimit(10);
         query.findInBackground(new FindCallback<ParseObject>() {
@@ -403,7 +411,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 } else {
                     //Set user locations on Map
                     Toast.makeText(getApplicationContext(), "no error", Toast.LENGTH_SHORT).show();
-                    myMarkersList = new ArrayList<Marker>(list.size());
+                    //myMarkersList = new ArrayList<Marker>(list.size());
                     //Handle users respectively
                     for (ParseObject use : list) {
                         //Initialize other users' marker if haven't

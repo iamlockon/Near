@@ -67,6 +67,13 @@
                 android:padding="10dp"
                 android:layout_marginTop="10dp"
                 android:paddingRight="20dp"/>
+            <ProgressBar android:id="@+id/progress_bar"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:fadingEdge="horizontal"
+                android:visibility="invisible"
+                android:layout_gravity="center|center_horizontal"
+                style="@android:style/Widget.ProgressBar.Small" />
 
         </fragment>
 
