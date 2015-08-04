@@ -50,6 +50,23 @@
         android:layout_marginTop="@dimen/com_parse_ui_small_vertical_spacing"
         android:hint="@string/com_parse_ui_name_input_hint"
         android:inputType="textPersonName" />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <CheckBox
+            android:id="@+id/check_sim_serial"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"/>
+        <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/check_sim_serial"
+        android:text="I agree to provide my SIM card serial number for user safety"  />
+    </RelativeLayout>
+
+
 
     <Button
         android:id="@+id/create_account"

@@ -22,24 +22,31 @@
 package com.parse.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
 /**
  * Fragment for the user signup screen.
  */
-public class ParseSignupFragment extends ParseLoginFragmentBase implements OnClickListener {
+public class ParseSignupFragment extends ParseLoginFragmentBase implements OnClickListener{
   public static final String USERNAME = "com.parse.ui.ParseSignupFragment.USERNAME";
   public static final String PASSWORD = "com.parse.ui.ParseSignupFragment.PASSWORD";
 
@@ -49,6 +56,7 @@ public class ParseSignupFragment extends ParseLoginFragmentBase implements OnCli
   private EditText emailField;
   private EditText nameField;
   private Button createAccountButton;
+  private CheckBox simCheck;
   private ParseOnLoginSuccessListener onLoginSuccessListener;
 
   private ParseLoginConfig config;
@@ -57,31 +65,33 @@ public class ParseSignupFragment extends ParseLoginFragmentBase implements OnCli
   private static final String LOG_TAG = "ParseSignupFragment";
   private static final int DEFAULT_MIN_PASSWORD_LENGTH = 6;
   private static final String USER_OBJECT_NAME_FIELD = "name";
+  protected static int SIM_STATE;
+  protected static String simSerialNumber = null;
+    TelephonyManager telemanger;
 
-  public static ParseSignupFragment newInstance(Bundle configOptions, String username, String password) {
+
+    public static ParseSignupFragment newInstance(Bundle configOptions, String username, String password) {
     ParseSignupFragment signupFragment = new ParseSignupFragment();
     Bundle args = new Bundle(configOptions);
     args.putString(ParseSignupFragment.USERNAME, username);
     args.putString(ParseSignupFragment.PASSWORD, password);
     signupFragment.setArguments(args);
+
     return signupFragment;
   }
 
-  @Override
+    @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup parent,
                            Bundle savedInstanceState) {
-
     Bundle args = getArguments();
     config = ParseLoginConfig.fromBundle(args, getActivity());
-
+    telemanger = (TelephonyManager)getActivity().getSystemService(Context.TELEPHONY_SERVICE);
     minPasswordLength = DEFAULT_MIN_PASSWORD_LENGTH;
     if (config.getParseSignupMinPasswordLength() != null) {
       minPasswordLength = config.getParseSignupMinPasswordLength();
     }
-
     String username = (String) args.getString(USERNAME);
     String password = (String) args.getString(PASSWORD);
-
     View v = inflater.inflate(R.layout.com_parse_ui_parse_signup_fragment,
         parent, false);
     ImageView appLogo = (ImageView) v.findViewById(R.id.app_logo);
@@ -92,6 +102,7 @@ public class ParseSignupFragment extends ParseLoginFragmentBase implements OnCli
     emailField = (EditText) v.findViewById(R.id.signup_email_input);
     nameField = (EditText) v.findViewById(R.id.signup_name_input);
     createAccountButton = (Button) v.findViewById(R.id.create_account);
+    simCheck = (CheckBox)v.findViewById(R.id.check_sim_serial);
 
     usernameField.setText(username);
     passwordField.setText(password);
@@ -112,7 +123,6 @@ public class ParseSignupFragment extends ParseLoginFragmentBase implements OnCli
       createAccountButton.setText(config.getParseSignupSubmitButtonText());
     }
     createAccountButton.setOnClickListener(this);
-
     return v;
   }
 
@@ -140,6 +150,7 @@ public class ParseSignupFragment extends ParseLoginFragmentBase implements OnCli
     String password = passwordField.getText().toString();
     String passwordAgain = confirmPasswordField.getText().toString();
 
+      SIM_STATE = telemanger.getSimState();
     String email = null;
     if (config.isParseLoginEmailAsUsername()) {
       email = usernameField.getText().toString();
@@ -174,6 +185,12 @@ public class ParseSignupFragment extends ParseLoginFragmentBase implements OnCli
       showToast(R.string.com_parse_ui_no_email_toast);
     } else if (name != null && name.length() == 0) {
       showToast(R.string.com_parse_ui_no_name_toast);
+    } else if (!simCheck.isChecked()) {
+      showToast("Please check the checkbox if you agree");
+    } else if (ParseLoginActivity.isRegistered){
+      showToast("This sim card is already a subscriber.");
+    } else if (SIM_STATE != 5){
+      showToast("Cannot detect user SIM card, please check.");
     } else {
       ParseUser user = new ParseUser();
 
@@ -186,7 +203,8 @@ public class ParseSignupFragment extends ParseLoginFragmentBase implements OnCli
       if (name.length() != 0) {
         user.put(USER_OBJECT_NAME_FIELD, name);
       }
-
+      // Set SimSerialNumber
+      user.put("simSerialNumber", simSerialNumber);
       loadingStart();
       user.signUpInBackground(new SignUpCallback() {
 
@@ -223,7 +241,6 @@ public class ParseSignupFragment extends ParseLoginFragmentBase implements OnCli
       });
     }
   }
-
   @Override
   protected String getLogTag() {
     return LOG_TAG;
@@ -232,4 +249,5 @@ public class ParseSignupFragment extends ParseLoginFragmentBase implements OnCli
   private void signupSuccess() {
     onLoginSuccessListener.onLoginSuccess();
   }
+
 }

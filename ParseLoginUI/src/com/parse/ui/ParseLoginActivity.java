@@ -23,6 +23,7 @@ package com.parse.ui;
 
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -31,11 +32,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Window;
+import android.widget.Toast;
 
+import com.parse.FindCallback;
 import com.parse.Parse;
+import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+
+import java.util.List;
 
 /**
  * Encapsulates the Parse login flow. The user can log in by username/password,
@@ -81,16 +90,22 @@ public class ParseLoginActivity extends FragmentActivity implements
 
   private ProgressDialog progressDialog;
   private Bundle configOptions;
-
+    //Check if this SIM card registered
+  public static String simSerialNumber;
+  public static boolean isRegistered,isQueryEnd;
+  TelephonyManager telemanger;
   // Although Activity.isDestroyed() is in API 17, we implement it anyways for older versions.
   private boolean destroyed = false;
-
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
+      //Get device's current SIM card Serial Number
+      telemanger = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+      simSerialNumber = telemanger.getSimSerialNumber();
+      //Query for Signup use
+      queryForSim();
     // Combine options from incoming intent and the activity metadata
     configOptions = getMergedOptions();
 
@@ -99,6 +114,7 @@ public class ParseLoginActivity extends FragmentActivity implements
       getSupportFragmentManager().beginTransaction().add(fragmentContainer,
           ParseLoginFragment.newInstance(configOptions)).commit();
     }
+
   }
 
   @Override
@@ -127,8 +143,9 @@ public class ParseLoginActivity extends FragmentActivity implements
     // so that if the user clicks the back button, they are brought back
     // to the login form.
     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
     transaction.replace(fragmentContainer,
-        ParseSignupFragment.newInstance(configOptions, username, password));
+            ParseSignupFragment.newInstance(configOptions, username, password));
     transaction.addToBackStack(null);
     transaction.commit();
   }
@@ -229,4 +246,22 @@ public class ParseLoginActivity extends FragmentActivity implements
 
     return mergedOptions;
   }
+    private void queryForSim(){
+        ParseQuery<ParseObject> query;
+        query = ParseQuery.getQuery("_User");
+        query.whereEqualTo("simSerialNumber", simSerialNumber);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> list, ParseException e) {
+                if (e == null) {
+                    if (list.size() > 0) {
+                        isRegistered = true;
+                    }
+                    isQueryEnd = true;
+                } else {
+                    Toast.makeText(getApplicationContext(), "error in query:" + e.toString(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
 }
