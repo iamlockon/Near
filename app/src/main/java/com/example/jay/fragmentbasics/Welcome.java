@@ -18,6 +18,9 @@ import com.parse.ui.ParseLoginActivity;
 import java.util.Arrays;
 
 public class Welcome extends Activity{
+    //Created by Jean for Achievement Test
+    Button bthAchi;
+
     Button btnWelcome,btnLogin;
     boolean loginYest =false;
     boolean isSuccessive = false;
@@ -36,6 +39,17 @@ public class Welcome extends Activity{
         btnWelcome.startAnimation(animation);
         //TODO Get yesterday login (boolean)
         ParseUser user = ParseUser.getCurrentUser();
+
+        bthAchi = (Button) findViewById(R.id.btnAchi);
+        bthAchi.setOnClickListener(new Button.OnClickListener(){
+            Intent i = new Intent();
+            public void onClick(View v){
+                v.clearAnimation();
+                i.setClass(Welcome.this, AchievementActivity.class);
+                    startActivity(i);
+
+            }
+        });
 
     }
     private Button.OnClickListener btnWelcomeClickListener =new Button.OnClickListener(){
