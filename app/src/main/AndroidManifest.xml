@@ -67,7 +67,7 @@
             android:label="@string/title_activity_hotmap" >
         </activity>
         <activity
-            android:name=".HelpActivity"
+            android:name=".HelpWindow"
             android:label="@string/title_activity_help" >
         </activity>
     </application>

@@ -1,12 +1,13 @@
 package com.example.jay.fragmentbasics;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import android.content.Context;
+
+import android.support.v7.app.AppCompatActivity;
 
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
@@ -33,7 +34,7 @@ public class AchievementActivity extends Activity {
 
 
     private void customActionBar() {
-        ActionBar actionBar = getActionBar();
+        ActionBar actionBar = (ActionBar)AchievementActivity.this.getActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.argb(255, 255, 255, 255)));
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayShowTitleEnabled(false);
@@ -49,10 +50,10 @@ public class AchievementActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        Log.d("Jean","actionbar start");
-//        //set actionbar
-//        customActionBar();
-//        Log.d("Jean", "actionbar done");
+        Log.d("Jean","actionbar start");
+        //set actionbar
+        customActionBar();
+        Log.d("Jean", "actionbar done");
 
         setContentView(R.layout.activity_achievement);
 
