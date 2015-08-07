@@ -19,7 +19,7 @@ import java.util.Arrays;
 
 public class Welcome extends Activity{
     //Created by Jean for Achievement Test
-    Button bthAchi;
+    Button btnJean;
 
     Button btnWelcome,btnLogin;
     boolean loginYest =false;
@@ -40,12 +40,13 @@ public class Welcome extends Activity{
         //TODO Get yesterday login (boolean)
         ParseUser user = ParseUser.getCurrentUser();
 
-        bthAchi = (Button) findViewById(R.id.btnAchi);
-        bthAchi.setOnClickListener(new Button.OnClickListener(){
+        btnJean = (Button) findViewById(R.id.btnJean);
+        btnJean.setText("View Jean's Activity");
+        btnJean.setOnClickListener(new Button.OnClickListener(){
             Intent i = new Intent();
             public void onClick(View v){
                 v.clearAnimation();
-                i.setClass(Welcome.this, AchievementActivity.class);
+                i.setClass(Welcome.this, HotmapActivity.class);
                     startActivity(i);
 
             }
