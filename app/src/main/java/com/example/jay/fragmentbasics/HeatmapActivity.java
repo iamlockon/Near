@@ -2,12 +2,9 @@ package com.example.jay.fragmentbasics;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.util.Log;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Gravity;
@@ -18,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TableLayout;
@@ -29,7 +25,7 @@ import android.widget.ToggleButton;
 import android.widget.CompoundButton;
 import android.view.ViewGroup.LayoutParams;
 
-public class HotmapActivity extends Activity {
+public class HeatmapActivity extends Activity {
     private ToggleButton btnSwitchToList;
     private ImageView hotmap;
 
@@ -44,7 +40,7 @@ public class HotmapActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_hotmap);
+        setContentView(R.layout.activity_heatmap);
 
         btnSwitchToList = (ToggleButton) findViewById(R.id.btnSwitchToList);
         hotmap = (ImageView) findViewById(R.id.hotmap);
@@ -114,7 +110,7 @@ public class HotmapActivity extends Activity {
 
    private void showVoteWindow(View v, String topicName){
        LayoutInflater inflater = (LayoutInflater) v.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-       View popUpView = inflater.inflate(R.layout.activity_hopmap_popup, null, false);
+       View popUpView = inflater.inflate(R.layout.activity_heatmap_popup, null, false);
        TextView topicNameForPopup = (TextView) popUpView.findViewById(R.id.topicNameTextView);
        Button sendCommentForPopup = (Button) popUpView.findViewById(R.id.sendCommentForPopup);
 

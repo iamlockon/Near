@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -14,8 +13,6 @@ import android.widget.Button;
 
 import com.parse.ParseUser;
 import com.parse.ui.ParseLoginActivity;
-
-import java.util.Arrays;
 
 public class Welcome extends Activity{
     //Created by Jean for Achievement Test
@@ -46,7 +43,7 @@ public class Welcome extends Activity{
             Intent i = new Intent();
             public void onClick(View v){
                 v.clearAnimation();
-                i.setClass(Welcome.this, HotmapActivity.class);
+                i.setClass(Welcome.this, HeatmapActivity.class);
                     startActivity(i);
 
             }

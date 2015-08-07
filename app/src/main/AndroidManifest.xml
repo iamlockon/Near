@@ -63,8 +63,12 @@
             android:label="@string/title_activity_achievement" >
         </activity>
         <activity
-            android:name=".HotmapActivity"
+            android:name=".HeatmapActivity"
             android:label="@string/title_activity_hotmap" >
+        </activity>
+        <activity
+            android:name=".HelpActivity"
+            android:label="@string/title_activity_help" >
         </activity>
     </application>
 
