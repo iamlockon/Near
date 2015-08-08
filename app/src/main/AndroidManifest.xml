@@ -54,13 +54,10 @@
             android:name=".MainActivity"
             android:label="@string/app_name" >
         </activity>
-        <!-- <activity -->
-        <!-- android:name=".Achievement" -->
-        <!-- android:label="@string/title_activity_achievement" > -->
-        <!-- </activity> -->
         <activity
             android:name=".AchievementActivity"
-            android:label="@string/title_activity_achievement" >
+            android:label="@string/title_activity_achievement"
+            android:theme="@style/Theme.AppCompat.Light">
         </activity>
         <activity
             android:name=".HeatmapActivity"
