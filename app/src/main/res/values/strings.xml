@@ -6,4 +6,5 @@
     <string name="title_activity_achievement">Achievement</string>
     <string name="title_activity_hotmap">HotmapActivity</string>
     <string name="title_activity_help">HelpActivity</string>
+    <string name="title_activity_task_window">TaskWindow</string>
 </resources>

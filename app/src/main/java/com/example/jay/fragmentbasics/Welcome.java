@@ -43,7 +43,7 @@ public class Welcome extends Activity{
             Intent i = new Intent();
             public void onClick(View v){
                 v.clearAnimation();
-                i.setClass(Welcome.this, HelpWindow.class);
+                i.setClass(Welcome.this, TaskWindow.class);
                     startActivity(i);
 
             }

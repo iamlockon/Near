@@ -70,6 +70,10 @@
             android:name=".HelpWindow"
             android:label="@string/title_activity_help" >
         </activity>
+        <activity
+            android:name=".TaskWindow"
+            android:label="@string/title_activity_task_window" >
+        </activity>
     </application>
 
 </manifest>

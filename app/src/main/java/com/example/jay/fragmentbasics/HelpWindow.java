@@ -2,9 +2,7 @@ package com.example.jay.fragmentbasics;
 
 import android.app.Activity;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,7 +25,7 @@ public class HelpWindow extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.window_help);
+        setContentView(R.layout.activity_help_window);
 
         ly = (LinearLayout) findViewById(R.id.helpWindowLy);
         //Send Help Button
