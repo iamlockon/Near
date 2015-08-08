@@ -5,21 +5,36 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 
 public class TaskWindow extends Activity {
     private LinearLayout ly;
+    private Button btnHelp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_window);
 
         ly = (LinearLayout) findViewById(R.id.taskWindowLy);
+        btnHelp = (Button) findViewById(R.id.btnHelp);
 
         //please set bg color according to your help type.
         int alpha = 50;
         setBgColor(alpha, "RED", ly);
+
+        //Button listener
+        btnHelp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //do something
+                finish();
+                // or finishActivity if needing a code
+            }
+        });
     }
 
     @Override
