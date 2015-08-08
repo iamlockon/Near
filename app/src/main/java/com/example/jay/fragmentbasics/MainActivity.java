@@ -1,5 +1,8 @@
 package com.example.jay.fragmentbasics;
 
+import android.app.ActionBar;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
@@ -9,14 +12,18 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Color;
 import android.location.Location;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -88,14 +95,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     ParseUser user;
     ParseGeoPoint point;
     boolean isOtherUserInitialized = false;
-    ArrayList<Marker> myMarkersList = new ArrayList<Marker>();
+    ArrayList<Marker> myMarkersList = new ArrayList<>();
     boolean isShowOtherUsersOk = false;
     ProgressBar pb;
-    public static String simSerialNumber;
+    private static final int RESULT_NUM = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        hideSystemUI(this.getWindow().getDecorView());
         //mLatitudeText = (TextView)findViewById(R.id.txt1);
         //mLongitudeText = (TextView)findViewById(R.id.txt2);
         //btnView = (Button)findViewById(R.id.btnView);
@@ -151,9 +159,30 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        if(!haveNetworkConnection()){
+            new AlertDialog.Builder(this)
+                    .setTitle("Network is absent")
+                    .setIcon(com.parse.ui.R.drawable.com_parse_ui_app_logo)
+                    .setMessage("Click \"Setting\" to switch on, \"Quit\" to finish")
+                    .setPositiveButton("Setting", new
+                            DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int i) {
+                                    startActivity(new Intent(Settings.ACTION_SETTINGS));
+                                }
+                            })
+                    .setNegativeButton("Quit", new
+                            DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int i) {
+                                    finish();
+                                }
+                            })
+                    .show();
 
+        }
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_settings && isShowOtherUsersOk) {
             try {
                 showLocationWithMap(mLastLocation);
             }catch(Exception err){
@@ -163,8 +192,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
             return true;
         }
-        if(id ==R.id.update_location)setOtherUserOnMap(user);
-
+        if (id == R.id.user_list) {
+            Intent i = new Intent(this, UserListActivity.class);
+            //startActivityForResult(i, RESULT_NUM);
+            startActivity(i);
+            return true;
+        }
+        if(id ==R.id.update_location && isShowOtherUsersOk)setOtherUserOnMap(user);
+        if(!isShowOtherUsersOk && id ==R.id.update_location)Toast.makeText(this,
+                "Please wait till progress completed", Toast.LENGTH_SHORT).show();
         return super.onOptionsItemSelected(item);
     }
 
@@ -301,11 +337,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Toast.makeText(getApplicationContext(), "Get Current User",Toast.LENGTH_SHORT).show();
                 user.put("location", point);
                 user.saveInBackground();
-                isShowOtherUsersOk = true;
+
                 oldAccuracy =mLastLocation.getAccuracy();
                 if(oldAccuracy < 25){
                     stopLocationUpdates();
                     pb.setVisibility(ProgressBar.INVISIBLE);
+                    isShowOtherUsersOk = true;
                 }
             } else {
                 // show the signup or login screen
@@ -388,7 +425,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     .title(object.getString("name"))
                     .snippet("default snippet"));
             myMarkersList.add(mar);
-            object.put("markerId",mar.getId());
+            object.put("markerId", mar.getId());
             object.saveInBackground();
     }
     protected void setMarkerOfOtherUser(ParseObject use, Marker m){
@@ -404,7 +441,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //The user class is not "User" but "_User".....WTF
         ParseQuery<ParseObject> query = ParseQuery.getQuery("_User");
         Toast.makeText(getApplicationContext(), "setOther!~", Toast.LENGTH_SHORT).show();
-        query.whereNear("location", userLocation);
+        //query.whereNear("location", userLocation);
         query.whereNotEqualTo("name",userObject.getString("name"));
         //set 10 nearest user as a limit.
         query.setLimit(10);
@@ -445,6 +482,35 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         });
+    }
+    private boolean haveNetworkConnection() {
+        final ConnectivityManager conMgr = (ConnectivityManager) getSystemService (Context.CONNECTIVITY_SERVICE);
+        if (conMgr.getActiveNetworkInfo() != null && conMgr.getActiveNetworkInfo().isAvailable() &&    conMgr.getActiveNetworkInfo().isConnected()) {
+            return true;
+        } else {
+            System.out.println("Internet Connection Not Present");
+            return false;
+        }
+    }
+    // This snippet hides the system bars.
+    private void hideSystemUI(View mDecorView) {
+        // Set the IMMERSIVE flag.
+        // Set the content to appear under the system bars so that the content
+        // doesn't resize when the system bars hide and show.
+        mDecorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
+    }
+
+    // This snippet shows the system bars. It does this by removing all the flags
+// except for the ones that make the content appear under the system bars.
+    private void showSystemUI(View mDecorView) {
+        mDecorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
 }
 

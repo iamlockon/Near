@@ -46,7 +46,8 @@ public final class R {
     }
     public static final class id {
         public static int app_logo=0x7f090000;
-        public static int create_account=0x7f090012;
+        public static int check_sim_serial=0x7f090012;
+        public static int create_account=0x7f090013;
         public static int facebook_login=0x7f09000b;
         public static int login_help_email_input=0x7f090009;
         public static int login_help_instructions=0x7f090008;

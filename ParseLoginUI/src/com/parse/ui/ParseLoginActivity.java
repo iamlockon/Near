@@ -22,14 +22,18 @@
 package com.parse.ui;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.telephony.TelephonyManager;
@@ -113,6 +117,27 @@ public class ParseLoginActivity extends FragmentActivity implements
     if (savedInstanceState == null) {
       getSupportFragmentManager().beginTransaction().add(fragmentContainer,
           ParseLoginFragment.newInstance(configOptions)).commit();
+    }
+    if(!haveNetworkConnection()) {
+        new AlertDialog.Builder(ParseLoginActivity.this)
+                .setTitle("Network is absent")
+                .setMessage("Click \"Setting\" to switch on, \"Quit\" to finish")
+                .setPositiveButton("Setting", new
+                        DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int i) {
+                                startActivity(new Intent(Settings.ACTION_SETTINGS));
+                            }
+                        })
+                .setNegativeButton("Quit", new
+                        DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int i) {
+                                finish();
+                            }
+                        })
+                .show();
+
     }
 
   }
@@ -264,4 +289,14 @@ public class ParseLoginActivity extends FragmentActivity implements
             }
         });
     }
+
+  private boolean haveNetworkConnection() {
+    final ConnectivityManager conMgr = (ConnectivityManager) getSystemService (Context.CONNECTIVITY_SERVICE);
+    if (conMgr.getActiveNetworkInfo() != null && conMgr.getActiveNetworkInfo().isAvailable() &&    conMgr.getActiveNetworkInfo().isConnected()) {
+      return true;
+    } else {
+      System.out.println("Internet Connection Not Present");
+      return false;
+    }
+  }
 }

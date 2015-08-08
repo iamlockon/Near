@@ -204,7 +204,7 @@ public class ParseSignupFragment extends ParseLoginFragmentBase implements OnCli
         user.put(USER_OBJECT_NAME_FIELD, name);
       }
       // Set SimSerialNumber
-      user.put("simSerialNumber", simSerialNumber);
+      user.put("simSerialNumber", ParseLoginActivity.simSerialNumber);
       loadingStart();
       user.signUpInBackground(new SignUpCallback() {
 

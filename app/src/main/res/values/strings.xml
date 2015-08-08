@@ -4,4 +4,5 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Switch to Offline map</string>
     <string name="update_location">Update users location</string>
+    <string name="title_activity_user_list">UserList</string>
 </resources>

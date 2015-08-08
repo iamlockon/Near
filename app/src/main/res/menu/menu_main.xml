@@ -5,4 +5,6 @@
         android:orderInCategory="2" app:showAsAction="never" />
     <item android:id="@+id/update_location" android:title="@string/update_location"
         android:orderInCategory="1" app:showAsAction="never" />
+    <item android:id="@+id/user_list" android:title="@string/title_activity_user_list"
+        android:orderInCategory="1" app:showAsAction="ifRoom" />
 </menu>
