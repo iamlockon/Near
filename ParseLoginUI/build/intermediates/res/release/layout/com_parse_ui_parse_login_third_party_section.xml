@@ -18,4 +18,4 @@
         android:text="@string/com_parse_ui_twitter_login_button_label"
         android:visibility="gone" />
 </merge>
-<!-- From: file:/F:/FragmentBasics2/ParseLoginUI/res/layout/com_parse_ui_parse_login_third_party_section.xml -->
+<!-- From: file:/D:/Near/Near/ParseLoginUI/res/layout/com_parse_ui_parse_login_third_party_section.xml -->
