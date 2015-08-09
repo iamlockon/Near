@@ -53,6 +53,7 @@ public class SettingActivity extends AppCompatActivity {
 
     //private List<Integer> childSelected=new ArrayList<Integer>();
     private  List<String> childSelected =new ArrayList<String>();
+    private  ArrayList<ArrayList<Boolean>> chkStatus=new ArrayList<ArrayList<Boolean>>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,44 +100,25 @@ public class SettingActivity extends AppCompatActivity {
         */
 
         proFieldListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
+           @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                CheckedTextView chkTextView=(CheckedTextView)v.findViewById(R.id.textView_child);
-                if(childSelected.contains(proFieldHashmap.get(proFieldDetail.get(groupPosition)).get(childPosition))){
+               CheckedTextView chkTextView=(CheckedTextView)v.findViewById(R.id.textView_child);
+               chkTextView.setChecked(adapter.setChildClick(groupPosition, childPosition));
+               if(childSelected.contains(proFieldHashmap.get(proFieldDetail.get(groupPosition)).get(childPosition))){
                     childSelected.remove(proFieldHashmap.get(proFieldDetail.get(groupPosition)).get(childPosition));
                     selectedItems.remove(proFieldHashmap.get(proFieldDetail.get(groupPosition)).get(childPosition));
                     slctItemsAdapter.notifyDataSetChanged();
-                    chkTextView.setChecked(false);
                     Toast.makeText(getBaseContext(), proFieldHashmap.get(proFieldDetail.get(groupPosition)).get(childPosition) + " is removed.", Toast.LENGTH_SHORT).show();
                 }else{
-                    childSelected.add(proFieldHashmap.get(proFieldDetail.get(groupPosition)).get(childPosition));
+                   childSelected.add(proFieldHashmap.get(proFieldDetail.get(groupPosition)).get(childPosition));
                     selectedItems.add(proFieldHashmap.get(proFieldDetail.get(groupPosition)).get(childPosition));
                     slctItemsAdapter.notifyDataSetChanged();
-                    chkTextView.setChecked(true);
                     Toast.makeText(getBaseContext(), proFieldHashmap.get(proFieldDetail.get(groupPosition)).get(childPosition) + " is selected.", Toast.LENGTH_SHORT).show();
                 }
-
-/*
-
-                chkTextView.toggle();
-                    if(chkTextView.isChecked()) {
-                        //chkTextView.setChecked(true);
-                        selectedItems.add(proFieldHashmap.get(proFieldDetail.get(groupPosition)).get(childPosition));
-                        //selectedItems.add(chkTextView.getText().toString());
-                        slctItemsAdapter.notifyDataSetChanged();
-                        Toast.makeText(getBaseContext(), proFieldHashmap.get(proFieldDetail.get(groupPosition)).get(childPosition) + " is selected.", Toast.LENGTH_SHORT).show();
-                    }else{
-                        //chkTextView.setChecked(false);
-                        selectedItems.remove(proFieldHashmap.get(proFieldDetail.get(groupPosition)).get(childPosition));
-                        //selectedItems.remove(chkTextView.getText().toString());
-                        slctItemsAdapter.notifyDataSetChanged();
-                        Toast.makeText(getBaseContext(), proFieldHashmap.get(proFieldDetail.get(groupPosition)).get(childPosition) + " is removed.", Toast.LENGTH_SHORT).show();
-
-
-*/
-                return false;
+               return false;
             }
         });
+
 
     }
 

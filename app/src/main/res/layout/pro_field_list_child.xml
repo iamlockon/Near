@@ -11,7 +11,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/textView_child"
         android:checkMark="?android:attr/listChoiceIndicatorMultiple"
-        android:focusable="false"
         android:gravity="center_vertical"
         android:textSize="20dp"
         android:padding="20dp"/>
