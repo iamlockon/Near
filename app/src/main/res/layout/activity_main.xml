@@ -56,17 +56,18 @@
             android:id="@+id/map"
             android:layout_width="match_parent"
             android:layout_height="fill_parent"
-            android:layout_above="@id/linear1">
-
-            <Button
+            android:layout_above="@id/linear1"
+            tools:layout="@layout/activity_main">
+            <!--<ImageButton
+                android:id="@+id/btnAch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right|top"
-                android:background="@drawable/achievebtn"
-                android:text="Achievement"
-                android:padding="10dp"
-                android:layout_marginTop="10dp"
-                android:paddingRight="20dp"/>
+                android:layout_gravity="end"
+                android:src="@drawable/trophy"
+                android:background="@null"
+                android:layout_marginTop="80dp"
+                android:paddingRight="5dp"
+                android:paddingEnd="5dp"/>-->
             <ProgressBar android:id="@+id/progress_bar"
                 android:layout_width="70dp"
                 android:layout_height="70dp"

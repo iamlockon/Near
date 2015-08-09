@@ -79,7 +79,7 @@ public class UserListActivity extends AppCompatActivity {
             public void done(List<ParseObject> list, ParseException e) {
                 if (e == null) {
                     Username = new String[list.size()];
-                    Places = new String[list.size()];
+                    //Places = new String[list.size()];
                     int i = 0;
                     //check usersList availability
                     if(list.size() > 0) {

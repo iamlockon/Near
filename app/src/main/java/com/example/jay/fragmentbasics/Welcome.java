@@ -5,7 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
+
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -34,6 +34,9 @@ import java.util.Date;
 import java.util.List;
 
 public class Welcome extends Activity{
+    //Created by Jean for Achievement Test
+    Button btnJean;
+
     Button btnWelcome,btnLogin;
     public boolean isShownAlready = false;
     ParseUser user;

@@ -1,0 +1,29 @@
+apply plugin: 'com.android.library'
+
+dependencies {
+    compile 'com.parse.bolts:bolts-android:1.2.0'
+    compile 'com.android.support:support-v4:22.0.0'
+
+
+    // Have Deleted some remarks, and change the "provided" in the line above to "compile" to solve dependency error.
+    provided files("$rootProject.projectDir/ParseLoginUI/libs/Parse-1.9.4.jar")
+    provided files("$rootProject.projectDir/ParseLoginUI/libs/ParseFacebookUtilsV4-1.9.4.jar")
+}
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+
+    defaultConfig {
+        minSdkVersion 11
+        targetSdkVersion 22
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            res.srcDirs = ['res']
+        }
+    }
+}

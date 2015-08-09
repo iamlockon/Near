@@ -4,4 +4,4 @@
     <item android:drawable="@drawable/btn_back_green_active" android:state_pressed="true"/>
     <item android:drawable="@drawable/btn_back_green"/>
 
-</selector><!-- From: file:/F:/FragmentBasics2/mapswithme/res/drawable/btn_green_selector.xml -->
+</selector><!-- From: file:/C:/Users/Jay/Documents/GitHub/Near/mapswithme/res/drawable/btn_green_selector.xml -->

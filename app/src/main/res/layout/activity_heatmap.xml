@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:orientation="vertical"
+    >
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOff="Switch to List"
+        android:textOn="Back to Map"
+        android:layout_marginBottom="10dp"
+        android:id="@+id/btnSwitchToList"
+        android:checked="false" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/hot_map"
+            android:id="@+id/hotmap"/>
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/listView"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:visibility="gone"/>
+
+
+         <View android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#000000"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"/>
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Today's Hot Topics of My Section:"
+            android:layout_below="@+id/btnSwitchToList"/>
+
+
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:stretchColumns="1"
+        android:shrinkColumns="0"
+        android:id="@+id/hotTopicsTable">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+            <!--<ImageView-->
+                <!--android:layout_column="0"-->
+                <!--android:src="@drawable/star_icon"-->
+                <!--android:layout_height="20dp"-->
+                <!--android:layout_width="20dp"-->
+                <!--android:scaleType="fitCenter"-->
+                <!--android:layout_gravity="center"-->
+                <!--/>-->
+            <!--<TextView-->
+                <!--android:layout_column="1"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:text="Illegal parking problem!"-->
+                <!--android:layout_gravity="center" />-->
+            <!--<Button-->
+                <!--android:layout_column="2"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:text="VOTE!"/>-->
+        </TableRow>
+    </TableLayout>
+
+</LinearLayout>
+    </ScrollView>
