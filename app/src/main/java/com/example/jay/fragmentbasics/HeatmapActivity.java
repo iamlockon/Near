@@ -26,7 +26,7 @@ import android.widget.CompoundButton;
 import android.view.ViewGroup.LayoutParams;
 
 public class HeatmapActivity extends Activity {
-    private ToggleButton btnSwitchToList;
+    private ToggleButton btnSwitchList;
     private ImageView hotmap;
 
     private ListView listMap;
@@ -42,10 +42,10 @@ public class HeatmapActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_heatmap);
 
-        btnSwitchToList = (ToggleButton) findViewById(R.id.btnSwitchToList);
+        btnSwitchList = (ToggleButton) findViewById(R.id.btnSwitchToList);
         hotmap = (ImageView) findViewById(R.id.hotmap);
         listMap = (ListView) findViewById(R.id.listView);
-        listMapAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, listDis);
+        listMapAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listDis);
         listMap.setAdapter(listMapAdapter);
         //a hack for ListView inside ScrollView
         if (listMapAdapter != null) {
@@ -63,7 +63,7 @@ public class HeatmapActivity extends Activity {
         }
 
 
-        ToggleButton toggle = (ToggleButton) findViewById(R.id.btnSwitchToList);
+        ToggleButton toggle = btnSwitchList;
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {

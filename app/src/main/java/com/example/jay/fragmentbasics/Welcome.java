@@ -5,12 +5,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-<<<<<<< HEAD
-import android.graphics.Color;
+
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
-=======
->>>>>>> ce02a5c33a2d9c33092eac233647f750b787b55a
 import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
@@ -30,15 +27,12 @@ import com.parse.ParseUser;
 import com.parse.ui.ParseLoginActivity;
 import com.parse.ui.ParseSignupFragment;
 
-<<<<<<< HEAD
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-=======
->>>>>>> ce02a5c33a2d9c33092eac233647f750b787b55a
 public class Welcome extends Activity{
     //Created by Jean for Achievement Test
     Button btnJean;
@@ -62,7 +56,6 @@ public class Welcome extends Activity{
         //Check user's gps provider
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-<<<<<<< HEAD
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
             //OK
         }else{
@@ -71,20 +64,6 @@ public class Welcome extends Activity{
         user = ParseUser.getCurrentUser();
         user.put("isShownAlready",false);
         user.pinInBackground();
-=======
-        btnJean = (Button) findViewById(R.id.btnJean);
-        btnJean.setText("View Jean's Activity");
-        btnJean.setOnClickListener(new Button.OnClickListener(){
-            Intent i = new Intent();
-            public void onClick(View v){
-                v.clearAnimation();
-                i.setClass(Welcome.this, AchievementActivity.class);
-                    startActivity(i);
-
-            }
-        });
-
->>>>>>> ce02a5c33a2d9c33092eac233647f750b787b55a
     }
 
     private Button.OnClickListener btnWelcomeClickListener =new Button.OnClickListener(){

@@ -1,5 +1,6 @@
 package com.example.jay.fragmentbasics;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -85,8 +86,8 @@ public class AchievementActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.menu_next) {
+            startActivity(new Intent(AchievementActivity.this, HeatmapActivity.class));
         }
 
 

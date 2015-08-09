@@ -40,7 +40,7 @@ public class HelpWindow extends Activity {
 
         //Spinner
         helpTypeSpinner = (Spinner) findViewById(R.id.helpTypeSpinner);
-        helpTypeAdapter= new ArrayAdapter(this,android.R.layout.simple_spinner_item, helpTypes);
+        helpTypeAdapter= new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, helpTypes);
         helpTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         helpTypeSpinner.setAdapter(helpTypeAdapter);
 

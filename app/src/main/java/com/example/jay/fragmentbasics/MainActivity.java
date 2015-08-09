@@ -25,7 +25,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -82,7 +84,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     MapFragment mapfrag;
     Location mLastLocation;
     TextView mLatitudeText,mLongitudeText,mAccuracy;
-    Button btnView,btnShow;
+    Button btnView,btnShow,btnTask;
+    ImageButton btnAchment;
     LocationRequest mLocationRequest;
     boolean mRequestingLocationUpdates = true;
     // Request code to use when launching the resolution activity
@@ -106,16 +109,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         hideSystemUI(this.getWindow().getDecorView());
         //mLatitudeText = (TextView)findViewById(R.id.txt1);
         //mLongitudeText = (TextView)findViewById(R.id.txt2);
-        //btnView = (Button)findViewById(R.id.btnView);
-        //btnView.setOnClickListener(btnVListener);
+        btnTask = (Button)findViewById(R.id.btnHelp);
+        btnTask.setOnClickListener(btnTListener);
+        //btnAchment = (ImageButton)findViewById(R.id.btnAch);
+        //btnAchment.setOnClickListener(btnAListener);
         //mAccuracy = (TextView)findViewById(R.id.txt3);
         mapfrag = (MapFragment)getFragmentManager().findFragmentById(R.id.map);
+        View mapView = mapfrag.getView();
+        View locationButton = ((View) mapView.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
+        RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
+        // position on right bottom
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+        rlp.setMargins(0, 0, 30, 300);
         mapfrag.getMapAsync(this);
-        /**options.mapType(GoogleMap.MAP_TYPE_HYBRID)
-                .compassEnabled(true)
-                .rotateGesturesEnabled(true)
-                .tiltGesturesEnabled(true);
-        mapfrag.newInstance(options);*/
         pb = (ProgressBar) findViewById(R.id.progress_bar);
         //Connect to Google Play Services
         pb.setVisibility(ProgressBar.VISIBLE);
@@ -197,6 +204,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             //startActivityForResult(i, RESULT_NUM);
             startActivity(i);
             return true;
+        }
+        if(id == R.id.menu_Ach) {
+            startActivity(new Intent(this, AchievementActivity.class));
         }
         if(id ==R.id.update_location && isShowOtherUsersOk)setOtherUserOnMap(user);
         if(!isShowOtherUsersOk && id ==R.id.update_location)Toast.makeText(this,
@@ -386,18 +396,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         //flag = false;
     }
-    /*private Button.OnClickListener btnVListener =new Button.OnClickListener(){
+    private Button.OnClickListener btnTListener =new Button.OnClickListener(){
         public void onClick(View v){
-            showLocationWithMap(mLastLocation);
+            Intent i = new Intent(MainActivity.this, HelpWindow.class);
+            startActivity(i);
         }
-    }*/
+    };
+    /*private Button.OnClickListener btnAListener =new Button.OnClickListener(){
+        public void onClick(View v){
+            Intent i = new Intent(MainActivity.this, AchievementActivity.class);
+            startActivity(i);
+        }
+    };*/
     private GoogleMap.OnInfoWindowClickListener infoWindowClickListener = new GoogleMap.OnInfoWindowClickListener(){
 
         @Override
         public void onInfoWindowClick(Marker marker) {
-            Toast toast = Toast.makeText(MainActivity.this, "You clicked a marker at:" +
+            /*Toast toast = Toast.makeText(MainActivity.this, "You clicked a marker at:" +
                     " (" + String.valueOf(lat) + "," + String.valueOf(lon) + ")", Toast.LENGTH_SHORT);
-            toast.show();
+            toast.show();*/
+            startActivity(new Intent(MainActivity.this, TaskWindow.class));
+            //TODO link help
         }
     };
     //Get Location Updates
@@ -512,5 +531,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
+
 }
 

@@ -10,8 +10,8 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="2dp"
         android:text="UserID"
-        android:textColor="#0000FF"
-        android:textSize="24sp" />
+        android:textColor="#00AAFF"
+        android:textSize="40sp" />
     <TextView
         android:id="@+id/txtPlace"
         android:layout_width="match_parent"
@@ -19,8 +19,7 @@
         android:layout_marginTop="2dp"
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
-        android:layout_toRightOf="@id/txtUserId"
-        android:layout_toEndOf="@id/txtUserId"
+        android:layout_below="@id/txtUserId"
         android:text="UserPlace"
         android:textColor="#00FF00"
         android:textSize="24sp"/>

@@ -2,15 +2,12 @@
     <string name="app_name">Near</string>
 
     <string name="hello_world">Hello world!</string>
-<<<<<<< HEAD
     <string name="action_settings">Switch to Offline map</string>
     <string name="update_location">Update users location</string>
     <string name="title_activity_user_list">UserList</string>
-=======
-    <string name="action_settings">Settings</string>
+    <!--<string name="action_settings">Settings</string>-->
     <string name="title_activity_achievement">Achievement</string>
     <string name="title_activity_hotmap">HotmapActivity</string>
     <string name="title_activity_help">HelpActivity</string>
     <string name="title_activity_task_window">TaskWindow</string>
->>>>>>> ce02a5c33a2d9c33092eac233647f750b787b55a
 </resources>

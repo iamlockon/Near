@@ -16,9 +16,4 @@
     android:text="Change account"
     android:layout_weight="1"
     style="?android:attr/borderlessButtonStyle"/>
-    <Button android:id="@+id/btnJean"
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        style="?android:attr/borderlessButtonStyle"/>
 </LinearLayout>
