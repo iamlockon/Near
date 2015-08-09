@@ -1,0 +1,102 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
+    android:layout_height="fill_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.example.jay.fragmentbasics.SettingActivity">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btnSave"
+        android:id="@+id/btnSave"
+        android:onClick="btnSave_click"
+        android:layout_gravity="right"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/txtChange_Email"
+        android:id="@+id/txtViewCangeEmail"
+        android:layout_marginTop="50dp"
+        android:textSize="20sp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentTop="true"
+        android:gravity="top"
+        android:layout_alignTop="@+id/txtViewCP"
+        android:layout_marginLeft="0dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:id="@+id/txtViewCP"
+        android:textSize="20sp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="false"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="0dp"
+        android:text="@string/txtChange_Password" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/txt_pwdChange"
+        android:layout_gravity="right"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="180dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/txtViewCP" />
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/txt_emailChange"
+        android:layout_marginTop="40dp"
+        android:layout_toEndOf="@+id/txtViewCP"
+        android:layout_marginLeft="180dp"
+        android:layout_marginStart="0dp"
+        android:layout_alignLeft="@+id/txtViewCangeEmail"
+        android:layout_marginRight="0dp" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listViewSelected"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/btnProField"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtViewCommunityID"
+        android:layout_gravity="center_horizontal|bottom"
+        android:textSize="20sp"
+        android:text="@string/txtCommunityID"
+        android:singleLine="false"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/txtViewCangeEmail" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btnProField"
+        android:id="@+id/btnProField"
+        android:onClick="btnProField_click"
+        android:layout_below="@+id/txtViewCommunityID"
+        android:layout_marginTop="10dp" />
+
+</RelativeLayout>

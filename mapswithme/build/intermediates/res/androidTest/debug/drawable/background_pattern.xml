@@ -3,4 +3,4 @@
     android:dither="true"
     android:src="@drawable/pattern"
     android:tileMode="repeat" />
-<!-- From: file:/F:/FragmentBasics2/mapswithme/res/drawable/background_pattern.xml --><!-- From: file:/F:/FragmentBasics2/mapswithme/build/intermediates/bundles/debug/res/drawable/background_pattern.xml -->
+<!-- From: file:/E:/sunny/github/Near/mapswithme/res/drawable/background_pattern.xml --><!-- From: file:/E:/sunny/github/Near/mapswithme/build/intermediates/bundles/debug/res/drawable/background_pattern.xml -->

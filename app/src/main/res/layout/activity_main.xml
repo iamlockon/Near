@@ -4,30 +4,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
-    <LinearLayout android:id="@+id/linear1"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
-        <Button android:id="@+id/btnMail"
-            android:layout_gravity="start|bottom"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:background="@drawable/mail_icon"/>
-        <Button
-            android:id="@+id/btnHelp"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_weight="2"
-            android:background="@drawable/help_icon"/>
-        <Button android:id="@+id/btnInfo"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:background="@drawable/info_icon"/>
-    </LinearLayout>
-    <!--
+
     <TextView
         android:id="@+id/txt1"
         android:layout_width="wrap_content"
@@ -40,42 +17,29 @@
     <TextView
         android:id="@+id/txt3"
         android:layout_width="wrap_content"
-        android:layout_height="10dp"
-        android:layout_below="@+id/txt2" />-->
-    <!--<Button
+        android:layout_height="30dp"
+        android:layout_below="@+id/txt2" />
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Offline Map"
-        android:id="@+id/btnView"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />-->
-
+        android:layout_below="@id/txt3"
+        android:id="@+id/linearLayout">
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:map="http://schemas.android.com/apk/res-auto"
             android:name="com.google.android.gms.maps.MapFragment"
             android:id="@+id/map"
             android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            android:layout_above="@id/linear1">
+            android:layout_height="match_parent" />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right|top"
-                android:background="@drawable/achievebtn"
-                android:text="Achievement"
-                android:padding="10dp"
-                android:layout_marginTop="10dp"
-                android:paddingRight="20dp"/>
-            <ProgressBar android:id="@+id/progress_bar"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:indeterminate="true"
-                android:fadingEdge="horizontal"
-                android:visibility="invisible"
-                android:layout_gravity="center|center_horizontal"
-                style="@android:style/Widget.ProgressBar.Large" />
+    </LinearLayout>
 
-        </fragment>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View Map"
+        android:id="@+id/btnView"
+        android:layout_above="@+id/txt3"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
