@@ -1,0 +1,88 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.example.jay.fragmentbasics.UserInfo">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.example.jay.fragmentbasics.VerticalProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:id="@+id/verticalProgressBar"
+            android:layout_width="10dp"
+            android:layout_marginLeft="210dp"
+            android:layout_height="150dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btnReceived"
+            android:id="@+id/btnReceived"
+            android:layout_marginTop="200dp"
+            android:layout_marginLeft="0dp"
+            android:singleLine="true"
+            android:onClick="btnReceived_click" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/listViewReceived"
+            android:layout_marginTop="250dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btnGiven"
+            android:id="@+id/btnGiven"
+            android:layout_gravity="left|top"
+            android:onClick="btnGiven_click"
+            android:layout_marginTop="200dp"
+            android:layout_marginLeft="100dp" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/listViewGiven"
+            android:layout_marginTop="250dp" />
+
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/imgBtnSetting"
+            android:layout_gravity="right|top"
+            android:layout_marginTop="200dp"
+            android:layout_marginRight="0dp"
+            android:src="@drawable/setting_icon"
+            android:visibility="visible"
+            android:contentDescription="@string/imgBtnSetting"
+            android:clickable="true"
+            android:onClick="imgBtnSetting_click"
+            android:scaleType="fitCenter"
+            android:padding="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/txtLevel"
+            android:id="@+id/textView4"
+            android:layout_gravity="left|top"
+            android:textSize="70sp"
+            android:layout_marginTop="60dp"
+            android:layout_marginLeft="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/txtLvlNum"
+            android:id="@+id/txt_Level"
+            android:layout_gravity="left|top"
+            android:textSize="70sp"
+            android:layout_marginTop="60dp"
+            android:layout_marginLeft="120dp" />
+
+    </FrameLayout>
+</RelativeLayout>
